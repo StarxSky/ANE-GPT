@@ -4,10 +4,13 @@
 #
 import torch
 import logging
-import encoder, decoder, multihead_attention, ffn
+import Core.encoder as encoder
+import Core.decoder as decoder
+import Core.multihead_attention as multihead_attention
+import Core.ffn as ffn
 
 from torch import nn
-from testing_utils import assert_rank, assert_shape
+from Core.testing_utils import assert_rank, assert_shape
 
 
 
