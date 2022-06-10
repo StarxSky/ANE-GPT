@@ -93,7 +93,7 @@ class TestTransformerReferenceImplementation(unittest.TestCase):
                 ],
                 compute_units=ct.ComputeUnit.ALL,
             )
-            ANE_Model_CoreML_Model.save("ANECoreML.mlpackage")
+            
 
         except Exception as e:
 
