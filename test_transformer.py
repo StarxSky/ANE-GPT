@@ -94,7 +94,7 @@ class TestTransformerReferenceImplementation(unittest.TestCase):
                 compute_units=ct.ComputeUnit.ALL,
             )
             
-
+            ANE_Model_CoreML_Model.save("ANE_CoreML_Model.mlpackage")
         except Exception as e:
 
             raise RuntimeError(
@@ -103,49 +103,8 @@ class TestTransformerReferenceImplementation(unittest.TestCase):
         logger.info("CoreML conversion targeting ANE is successful")
 
 
-        # CoreML inference on test inputs
-        coreml_out = list(
-            ANE_Model_CoreML_Model.predict(
-                {k: v.numpy()
-                 for k, v in self.inputs.items()}).values())[0]
-        coreml_test_outputs = torch.from_numpy(coreml_out).numpy()
+       
 
-        # Test end-to-end parity for the conversion pipeline
-        psnr = Core.testing_utils.compute_psnr(coreml_test_outputs,
-                                          self.ref_outputs[0].numpy())
-        logger.info(
-            f"PSNR between original PyTorch module and optimized CoreML ANE forward pass: {psnr:.2f}"
-        )
-        assert psnr > PSNR_THRESHOLD
-
-        # Speed-up lower bound test
-        ane_latency = Core.testing_utils.rough_timeit(
-
-            lambda: ANE_Model_CoreML_Model.predict(
-                {k: v.numpy()
-                 for k, v in self.inputs.items()}),
-            n=13)
-
-        # =========================
-        noane_latency = Core.testing_utils.rough_timeit(
-            lambda: ANE_Model_CoreML_Model.predict(
-                {k: v.numpy()
-                 for k, v in self.inputs.items()}),
-            n=13)
-
-
-        speedup_factor = noane_latency / ane_latency
-        logger.info(f"Speed-up factor from GPU+CPU to ANE is at least {speedup_factor:.2f}")
-
-
-        if speedup_factor < SANITY_CHECK_CPUGPU2ANE_SPEEDUP_FACTOR:
-            logger.error(
-                f"Expected speed-up (Expected >{SANITY_CHECK_CPUGPU2ANE_SPEEDUP_FACTOR:.2f}, observed {speedup_factor:.2f}) was not observed " \
-                "between coremltools.ComputeUnit.ALL and coremltools.ComputeUnit.CPU_AND_GPU. The reason might be, among other things that your Mac " \
-                "does not have Apple Silicon (e.g. M1) so ANE is unavailable for this test. This model will still work as efficiently as expected on " \
-                "on devices with A14 and newer or M1 or newer chips."
-            )
-
-
+    
 if __name__ == "__main__":
     unittest.main()
