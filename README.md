@@ -1,5 +1,5 @@
 # ANE-GPT
-- Optimizations and improvements based on Apple's project ["ML-ANE-Transformers"](https://github.com/Apple/ml-ane-transformers)
+- Optimizations and improvements based on Apple's project ["ML-ANE-Transformers"](https://github.com/Apple/ml-ane-transformers).
 - The adaptation of the GPT-2 model in ANE will be carried out later in the project.
 - In the original official example I made a slight modification to make it a model of GPT-2 architecture,
 and can be optimized and accelerated on the ANE engine.
